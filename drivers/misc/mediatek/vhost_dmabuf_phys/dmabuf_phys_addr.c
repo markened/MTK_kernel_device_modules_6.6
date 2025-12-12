@@ -357,15 +357,15 @@ static struct vhost_dmabuf *vhost_dmabuf_create(u32 resource_id, int nents,
 	sgl = dmabuf->sgt->sgl;
 	for (i = 0; i < nents; i++) {
 		paddr = ents[i].addr;
-/*
- *		paddr = dmabuf_user_v2p(ents[i].addr);
- *		if (paddr == 0) {
- *			pr_err(
- *				"failed to page for address:%llx, ret:%d\n",
- *				ents[i].addr, ret);
- *			goto out_sgt_sgl;
- *		}
- */
+
+ 		paddr = dmabuf_user_v2p(ents[i].addr);
+ 		if (paddr == 0) {
+ 			pr_err(
+ 				"failed to page for address:%llx, ret:%d\n",
+ 				ents[i].addr, ret);
+			goto out_sgt_sgl;
+		}
+ 
 		page = phys_to_page(paddr);
 		sg_set_page(sgl, page, ents[i].length, 0);
 		sgl = sg_next(sgl);
